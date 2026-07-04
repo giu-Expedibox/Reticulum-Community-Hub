@@ -74,6 +74,22 @@ npm --prefix apps/rch-desktop install
 npm --prefix apps/rch-desktop run build
 ```
 
+## Operational Workflows
+
+- Use `.\scripts\release-readiness.ps1 -ServerOnlyAlpha` as the local
+  server-only release gate. Use `-LiveTak -LiveReticulum` only after the
+  required live infrastructure is configured and reachable.
+- For local Reticulum receipt, fanout, and ZeroMQ event-poll validation, run
+  `.\scripts\local-reticulum-live-gate.ps1 -IncludeZmqEventPoll` with the
+  sibling `LXMF-rs\target\debug\reticulumd.exe` available. Add
+  `-IncludeZmqLoad` or `-ZmqLoadOnly` for the local ZeroMQ load gate.
+- Full Rust release packages are built by `.github/workflows/rust-release.yml`;
+  manual runs upload workflow artifacts, and published GitHub releases receive
+  server archives, checksums, and desktop bundles as release assets.
+- For Python store migration into the Rust runtime, dry-run
+  `scripts\import-python-rch-production.ps1 -SourceRoot . -LegacyStore RTH_Store -TargetDir target\production-rch-3 -DryRun`
+  before running the same command without `-DryRun`.
+
 ## Compatibility Rules
 
 - Preserve the RCH northbound contract as the compatibility target: `/Status`,
